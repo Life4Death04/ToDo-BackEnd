@@ -1,8 +1,8 @@
-import { createRecord, deleteRecord, getRecordById, updateRecord } from "../services/userServices.js";
+import { createUser, deleteRecord, getRecordById, updateUser } from "../services/userServices.js";
 
-export const createUser = async(req, res) =>{
+export const registerUser = async(req, res) =>{
     try{
-        const newUser = await createRecord(req.body);
+        const newUser = await createUser(req.body);
         res.send(newUser);
     }catch(error){
         console.error(error + error.code);
@@ -28,7 +28,7 @@ export const findUserById = async(req, res) =>{
 export const updateUserData = async(req, res) =>{
     try{
         const userToUpdate = req.params.id;
-        const newData = await updateRecord(userToUpdate, req.body)
+        const newData = await updateUser(userToUpdate, req.body)
         if(!userToUpdate) return res.status(404).json({error: 'User not found'})
         res.send(newData);
     }catch(error){
