@@ -1,6 +1,6 @@
 import prisma from "../prisma/client.js";
 
-export const createRecord = async (userData) =>{
+export const createUser = async (userData) =>{
     return prisma.user.create({
         data: userData
     })
@@ -12,7 +12,7 @@ export const getRecordById = async (id) =>{
     })
 }
 
-export const updateRecord = async (id, userData) =>{
+export const updateUser = async (id, userData) =>{
     return prisma.user.update({
         where: {id: parseInt(id)},
         data: userData
