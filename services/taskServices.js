@@ -1,39 +1,50 @@
 import prisma from "../prisma/client.js";
 
-export const createRecord = async (taskData) =>{
+export const createTaskItem = async (itemData) =>{
     return await prisma.task.create({
-        data: taskData
+        data: itemData
     })
 }
 
-export const getRelatedRecordsById = async (id) =>{
+export const getAllTasks = async (authorId) =>{
     return await prisma.task.findMany({
-        where: {authorId: parseInt(id)}
+        where: {authorId: parseInt(authorId)}
     })
 }
 
-export const deleteRelatedTasks = async (taskId, authorId) =>{
-    return await prisma.task.delete({
+export const getTaskById = async(authorId, taskId) =>{
+    return await prisma.task.findUnique({
         where: {
-            id: parseInt(taskId),
-            authorId: parseInt(authorId)
+            authorId: parseInt(authorId),
+            id: parseInt(taskId)
         }
     })
 }
 
-export const toggleTaskStatus = async (taskId, authorId) =>{
-    const task = await prisma.task.findUnique({
+export const toggleTaskState = async(authorId, taskId) =>{
+    const taskState = await prisma.task.findUnique({
         where: {
-            id: parseInt(taskId),
-            authorId: parseInt(authorId)
+            authorId: parseInt(authorId),
+            id: parseInt(taskId)
         }
     })
 
     return await prisma.task.update({
         where: {
-            id: parseInt(taskId),
-            authorId: parseInt(authorId)
+            authorId: parseInt(authorId),
+            id: parseInt(taskId)
         },
-        data: {check: !task.check}
+        data: {
+            check: !taskState.check
+        }
+    })
+}
+
+export const deleteTaskById = async(authorId, taskId) =>{
+    return await prisma.task.delete({
+        where: {
+            authorId: parseInt(authorId),
+            id: parseInt(taskId)
+        }
     })
 }
