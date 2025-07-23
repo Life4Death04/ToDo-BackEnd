@@ -1,8 +1,8 @@
 import express from 'express';
-import { createUser, deleteUser, findUserById, updateUserData } from '../controllers/userControllers.js';
+import { registerUser, deleteUser, findUserById, updateUserData } from '../controllers/userControllers.js';
 const userRoutes = express.Router();
 
-userRoutes.post('/create', createUser)
+userRoutes.post('/create', registerUser)
 userRoutes.get('/find/:id', findUserById)
 userRoutes.post('/update/:id', updateUserData)
 userRoutes.delete('/delete/:id', deleteUser)
