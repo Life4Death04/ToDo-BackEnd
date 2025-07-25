@@ -6,10 +6,7 @@ export const registeUserController = async(req, res) =>{
         res.send(newUser);
     }catch(error){
         console.error(error + error.code);
-        if(error.code === 'P2002'){
-            res.status(409).json({error: `This email is already in use`})
-        }
-        res.status(500).json({error: 'Internal Server Error'})
+        res.status(500).json({error: error.message})
     }
 }
 
