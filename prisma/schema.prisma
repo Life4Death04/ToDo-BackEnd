@@ -18,6 +18,7 @@ model User{                           //We can use uuid() instead of autoincreme
   firstName   String      @db.VarChar(50)    
   lastName    String      @db.VarChar(50)
   email       String      @unique
+  password    String  
   tasks       Task[]
 }
 

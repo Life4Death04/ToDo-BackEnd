@@ -1,21 +1,29 @@
-import { createUser, deleteRecord, getRecordById, updateUser } from "../services/userServices.js";
+import { createUser, deleteUser, getUserById, loginUser, updateUserData } from "../services/userServices.js";
 
-export const registerUser = async(req, res) =>{
+export const registeUserController = async(req, res) =>{
     try{
         const newUser = await createUser(req.body);
         res.send(newUser);
     }catch(error){
         console.error(error + error.code);
-        if(error.code === 'P2002'){
-            res.status(409).json({error: `Duplicated Unique Values in the Request`})
-        }
-        res.status(500).json({error: 'Internal Server Error'})
+        res.status(500).json({error: error.message})
     }
 }
 
-export const findUserById = async(req, res) =>{
+export const loginUserController = async(req, res) =>{
     try{
-        const userToFind = await getRecordById(req.params.id);
+        const data = req.body
+        const userToLogin = await loginUser(data)
+        res.status(200).json({message: 'Logged In', data: userToLogin})
+    }catch(error){
+        console.error(error)
+        res.status(500).json({error: error.message})
+    }
+}
+
+export const findUserByIdController = async(req, res) =>{
+    try{
+        const userToFind = await getUserById(req.params.id);
         if (!userToFind) return res.status(404).json({error: 'User not found'})
         res.send(userToFind)
     }catch(error){
@@ -25,10 +33,10 @@ export const findUserById = async(req, res) =>{
     }
 }
 
-export const updateUserData = async(req, res) =>{
+export const updateUserDataController = async(req, res) =>{
     try{
         const userToUpdate = req.params.id;
-        const newData = await updateUser(userToUpdate, req.body)
+        const newData = await updateUserData(userToUpdate, req.body)
         if(!userToUpdate) return res.status(404).json({error: 'User not found'})
         res.send(newData);
     }catch(error){
@@ -37,10 +45,10 @@ export const updateUserData = async(req, res) =>{
     }
 }
 
-export const deleteUser = async(req, res) =>{
+export const deleteUserController = async(req, res) =>{
     try{
         const userId = req.params.id;
-        const userToDelete = await deleteRecord(userId);
+        const userToDelete = await deleteUser(userId);
         res.status(200).json({message: 'User was deleted successfully'})
     }catch(error){
         console.error(error);

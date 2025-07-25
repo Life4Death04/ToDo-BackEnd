@@ -1,13 +1,13 @@
 import express from 'express';
 import userRoutes from './routes/userRoutes.js';
-import toDoRoutes from './routes/toDoRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use('/user', userRoutes);
-app.use('/task', toDoRoutes)
+app.use('/task', taskRoutes)
 
 
 app.listen(port, () => {
