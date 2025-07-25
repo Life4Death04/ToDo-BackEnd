@@ -11,7 +11,6 @@ app.use(cors())
 app.use('/user', userRoutes);
 app.use('/task', taskRoutes)
 
-
 app.listen(port, () => {
     console.log(`Server is running in: http://localhost${port}`);
 })
