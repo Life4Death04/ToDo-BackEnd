@@ -1,4 +1,4 @@
-import { createUser, deleteUser, getUserById, updateUserData } from "../services/userServices.js";
+import { createUser, deleteUser, getUserById, loginUser, updateUserData } from "../services/userServices.js";
 
 export const registeUserController = async(req, res) =>{
     try{
@@ -10,6 +10,17 @@ export const registeUserController = async(req, res) =>{
             res.status(409).json({error: `This email is already in use`})
         }
         res.status(500).json({error: 'Internal Server Error'})
+    }
+}
+
+export const loginUserController = async(req, res) =>{
+    try{
+        const data = req.body
+        const userToLogin = await loginUser(data)
+        res.status(200).json({message: 'Logged In', data: userToLogin})
+    }catch(error){
+        console.error(error)
+        res.status(500).json({error: error.message})
     }
 }
 
