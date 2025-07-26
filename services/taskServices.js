@@ -1,50 +1,125 @@
 import prisma from "../prisma/client.js";
 
-export const createTaskItem = async (itemData) =>{
-    return await prisma.task.create({
-        data: itemData
+export const createTaskItem = async ({authorId, content}) =>{
+    const existingUser = await prisma.user.findUnique({
+        where: {id: parseInt(authorId)}
     })
+
+    if(!existingUser){
+        throw new Error("User not found!")
+    }
+
+    const newTask = await prisma.task.create({
+        data:{
+            content: content,
+            authorId: parseInt(authorId)
+        }
+    })
+
+    return{
+        message: "Task created successfully",
+        data: newTask
+    }
 }
 
 export const getAllTasks = async (authorId) =>{
-    return await prisma.task.findMany({
-        where: {authorId: parseInt(authorId)}
+    const existingUser = await prisma.user.findUnique({
+        where: {id: parseInt(authorId)}
     })
+
+    if(!existingUser){
+        throw new Error('User not found!')
+    }
+
+    const userTasks = await prisma.task.findMany({
+        where: {authorId: existingUser.authorId}
+    })
+
+    return{
+        message: `The tasks related to the user with the ID ${authorId} are: `,
+        data: userTasks
+    }
 }
 
 export const getTaskById = async(authorId, taskId) =>{
-    return await prisma.task.findUnique({
+    const existingUser = await prisma.user.findUnique({
+        where: {id: parseInt(authorId)}
+    })
+
+    if(!existingUser){
+        throw new Error('User not found!')
+    }
+
+    const userTask = await prisma.task.findUnique({
         where: {
-            authorId: parseInt(authorId),
-            id: parseInt(taskId)
+            authorId: existingUser.id,
+            id: taskId
         }
     })
+
+    return{
+        message: `Task related to the user with the ID ${authorId} are:`,
+        data: userTask
+    }
 }
 
 export const toggleTaskState = async(authorId, taskId) =>{
-    const taskState = await prisma.task.findUnique({
+    const existingUser = await prisma.user.findUnique({
+        where: {id: parseInt(authorId)}
+    })
+
+    if(!existingUser){
+        throw new Error("User not found!")
+    }
+
+    const task = await prisma.task.findUnique({
         where: {
             authorId: parseInt(authorId),
             id: parseInt(taskId)
         }
     })
 
-    return await prisma.task.update({
+    if(!task){
+        throw new Error("Task not found!")
+    }
+
+    const taskState = await prisma.task.update({
         where: {
-            authorId: parseInt(authorId),
-            id: parseInt(taskId)
+            authorId: task.authorId,
+            id: task.id
         },
         data: {
-            check: !taskState.check
+            check: !task.check
         }
     })
+
+    return{
+        message: `Task state updated successfuly`,
+        data: taskState
+    }
 }
 
 export const deleteTaskById = async(authorId, taskId) =>{
-    return await prisma.task.delete({
+    const existingUser = await prisma.user.findUnique({
+        where: {id: parseInt(authorId)}
+    })
+
+    if(!existingUser){
+        throw new Error('User not found!')
+    }
+
+    const taskToDelete = await prisma.task.delete({
         where: {
-            authorId: parseInt(authorId),
+            authorId: existingUser.id,
             id: parseInt(taskId)
         }
     })
+
+    if(!taskToDelete){
+        throw new Error('Task not found!')
+    }
+
+    return{
+        message: `Task (${taskId}) deleted successfully`
+    }
 }

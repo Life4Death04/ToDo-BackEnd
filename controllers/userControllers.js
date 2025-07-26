@@ -1,12 +1,14 @@
-import { createUser, deleteUser, getUserById, loginUser, updateUserData } from "../services/userServices.js";
+import { createUser, deleteUser, getUserById, loginUser, updateUserData, updateUserPassword } from "../services/userServices.js";
+
+const messageError = 'Internal Server Error'
 
 export const registeUserController = async(req, res) =>{
     try{
         const newUser = await createUser(req.body);
-        res.send(newUser);
+        res.json(newUser);
     }catch(error){
         console.error(error + error.code);
-        res.status(500).json({error: error.message})
+        res.status(500).json({message: messageError})
     }
 }
 
@@ -17,7 +19,7 @@ export const loginUserController = async(req, res) =>{
         res.status(200).json({message: 'Logged In', data: userToLogin})
     }catch(error){
         console.error(error)
-        res.status(500).json({error: error.message})
+        res.status(500).json({message: messageError})
     }
 }
 
@@ -25,23 +27,35 @@ export const findUserByIdController = async(req, res) =>{
     try{
         const userToFind = await getUserById(req.params.id);
         if (!userToFind) return res.status(404).json({error: 'User not found'})
-        res.send(userToFind)
+        res.json(userToFind)
     }catch(error){
         console.error(error);
         console.log(req.params.id)
-        res.status(500).json({error: 'Internal Server Error'})
+        res.status(500).json({message: messageError})
     }
 }
 
 export const updateUserDataController = async(req, res) =>{
     try{
         const userToUpdate = req.params.id;
-        const newData = await updateUserData(userToUpdate, req.body)
-        if(!userToUpdate) return res.status(404).json({error: 'User not found'})
-        res.send(newData);
+        const dataToUpdate = req.body
+        const newData = await updateUserData(userToUpdate, dataToUpdate)
+        /* if(!userToUpdate) return res.status(404).json({error: 'User not found'}) */
+        res.json(newData);
     }catch(error){
         console.error(error);
-        res.status(500).json({error: 'Internal Server Error'})
+        res.status(500).json({message: messageError + error.message})
+    }
+}
+
+export const updateUserPasswordController = async(req, res) =>{
+    try{
+        const userData = req.body
+        const passwordToChange = await updateUserPassword(userData)
+        res.json(passwordToChange)
+    }catch(error){
+        console.error(error + error.code)
+        res.status(500).json({message: messageError + error.message})
     }
 }
 
@@ -55,7 +69,7 @@ export const deleteUserController = async(req, res) =>{
         if(error.code === 'P2025'){
             return res.status(404).json({error: `User doesn't exist or is already deleted`})
         }else{
-            res.status(500).json({error: 'Internal Server Error'})
+            res.status(500).json({message: messageError})
         }   
     }
 }
