@@ -1,5 +1,6 @@
 import prisma from "../prisma/client.js";
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export const createUser = async ({firstName, lastName, email, password}) =>{
     const existingUser = await prisma.user.findUnique({
@@ -30,7 +31,7 @@ export const createUser = async ({firstName, lastName, email, password}) =>{
     }
 }
 
-export const loginUser = async ({email, password}) =>{
+/* export const loginUser = async ({email, password}) =>{
     const user = await prisma.user.findUnique({
         where: {
             email: email
@@ -51,10 +52,21 @@ export const loginUser = async ({email, password}) =>{
         message: 'Login Successful',
         user: user.email
     }
+} */
+
+export const getAllUsers = async() =>{
+    return await prisma.user.findMany({
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true
+        }
+    })
 }
 
 export const getUserById = async (id) =>{
-    return prisma.user.findFirst({
+    return await prisma.user.findFirst({
         where: {id: parseInt(id)}
     })
 }
@@ -115,5 +127,46 @@ export const updateUserPassword = async ({email, password}) =>{
 export const deleteUser = async (id) =>{
     return prisma.user.delete({
         where: {id: parseInt(id)}
+    })
+}
+
+
+//Login Service
+/*STEPS:
+    1* First make searches about email and password hashed in the DB (If they exists and they are correct we can proceed)
+    2* Creating the special token setting some values (Ask for explanation)
+    3* Return the response
+
+    !!!IMPORTANT: Add a value for our secret key in the .env
+*/
+export const loginUser = async({email, password}) => {
+    const user = await prisma.user.findUnique({
+        where: {email: email}
+    })
+
+    if(!user){
+        throw new Error("Email not registered")
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if(!isMatch){
+        throw new Error("Invalid password or email")
+    }
+
+    //Creating special token - Ask for explanation
+    const token = jwt.sign(
+        {userId: user.id},
+        process.env.JWT_SECRET,
+        {expiresIn: "1d"}
+    )
+
+    return({
+        message: "Login successful",
+        token,
+        user: {
+            id: user.id,
+            email: user.email
+        }
     })
 }
