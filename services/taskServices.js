@@ -32,13 +32,15 @@ export const getAllTasks = async (authorId) =>{
     }
 
     const userTasks = await prisma.task.findMany({
-        where: {authorId: existingUser.authorId}
+        where: {authorId: existingUser.id}
     })
 
-    return{
+    /* return{
         message: `The tasks related to the user with the ID ${authorId} are: `,
         data: userTasks
-    }
+    } */
+
+    return userTasks;
 }
 
 export const getTaskById = async(authorId, taskId) =>{
@@ -94,7 +96,7 @@ export const toggleTaskState = async(authorId, taskId) =>{
     })
 
     return{
-        message: `Task state updated successfuly`,
+        message: `Task state updated successfully`,
         data: taskState
     }
 }
