@@ -68,7 +68,7 @@ export const deleteTaskByIdController = async(req, res) =>{
 export const fetchUserTodosController = async(req, res) =>{
     try{
         const userId = req.params.userId;
-        const todos = fetchUserTodos(userId)
+        const todos = await fetchUserTodos(userId)
         res.json(todos)
     }catch(error){
         console.error(error)

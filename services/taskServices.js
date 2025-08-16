@@ -126,9 +126,8 @@ export const deleteTaskById = async(authorId, taskId) =>{
     }
 }
 
-
-//Protected tasks services
-export const fetchUserTodos = async({id}) =>{
+//Protected tasks services - All protected functions are functions that has to be requested using the API (rout) protected
+export const fetchUserTodos = async(id) =>{
     const user = await prisma.user.findUnique({
         where: {id: parseInt(id)}
     })
@@ -137,7 +136,11 @@ export const fetchUserTodos = async({id}) =>{
         throw new Error('User not found')
     }
 
-    return todos = await prisma.task.findMany({
+    const todos = await prisma.task.findMany({
         where: {authorId: parseInt(id)}
     })
+
+    return {
+        todos: todos
+    }
 }

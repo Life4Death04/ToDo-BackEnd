@@ -10,7 +10,7 @@ taskRoutes.get('/findTask/:authorId/:taskId', getTaskByIdController);
 taskRoutes.patch('/handleState/:authorId/:taskId', toggleTaskStateController);
 taskRoutes.delete('/deleteTask/:authorId/:taskId', deleteTaskByIdController);
 
-//Protected Task Routes
+//Protected Task Routes - All protected functions are functions that has to be requested using the API (rout) protected
 taskRoutes.get('/:userId', authMiddleware, fetchUserTodosController)
 
 export default taskRoutes;
