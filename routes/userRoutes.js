@@ -10,6 +10,7 @@ userRoutes.put('/update/:id', updateUserDataController)
 userRoutes.patch('/updatePassword', updateUserPasswordController)
 userRoutes.delete('/delete/:id', deleteUserController)
 
+//Protected Routes
 userRoutes.post('/login', loginUserController)
 
 export default userRoutes;

@@ -125,3 +125,19 @@ export const deleteTaskById = async(authorId, taskId) =>{
         message: `Task (${taskId}) deleted successfully`
     }
 }
+
+
+//Protected tasks services
+export const fetchUserTodos = async({id}) =>{
+    const user = await prisma.user.findUnique({
+        where: {id: parseInt(id)}
+    })
+
+    if(!user){
+        throw new Error('User not found')
+    }
+
+    return todos = await prisma.task.findMany({
+        where: {authorId: parseInt(id)}
+    })
+}
