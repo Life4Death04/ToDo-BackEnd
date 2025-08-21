@@ -4,7 +4,6 @@ const genericMessageError = {
     message: `Internal Server Error`
 }
 
-
 export const createTaskController = async(req, res) =>{
     try{ 
         const taskData = req.body
