@@ -30,8 +30,8 @@ model Task{
   id              Int         @id       @default(autoincrement())
   taskName        String      @db.VarChar(100)
   description     String?     @db.VarChar(200)
-  status          Status      @default(TODO)
-  dueDate         DateTime?   @db.Date
+  status          Status      
+  dueDate         DateTime?   
   priority        Priority    @default(LOW)
   archived        Boolean     @default(false)
   authorId        Int
