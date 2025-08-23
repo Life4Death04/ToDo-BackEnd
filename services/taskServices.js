@@ -109,6 +109,34 @@ export const deleteTaskById = async(authorId, taskId) =>{
     }
 }
 
+export const toggleTaskArchived = async(authorId, taskId) =>{
+    const existingUser = await prisma.user.findUnique({
+        where: {id: parseInt(authorId)}
+    })
+
+    if(!existingUser){
+        throw new Error('User not found!')
+    }
+
+    const taskToToggle = await prisma.task.findUnique({
+        where: {id: parseInt(taskId)}
+    })
+
+    if(!taskToToggle){
+        throw new Error('Task not found!')
+    }
+
+    const updatedTask = await prisma.task.update({
+        where: {id: taskToToggle.id},
+        data: {archived: !taskToToggle.archived}
+    })
+
+    return{
+        message: `Task (${taskId}) archived successfully`,
+        data: updatedTask
+    }
+}
+
 //----------------------Deprecated Tasks---------------------------//
 export const getAllTasks = async (authorId) =>{
     const existingUser = await prisma.user.findUnique({

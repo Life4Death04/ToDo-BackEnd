@@ -1,4 +1,4 @@
-import { createTaskItem, deleteTaskById, fetchTasks, getAllTasks, getTaskById, updateTask } from "../services/taskServices.js";
+import { createTaskItem, deleteTaskById, fetchTasks, getAllTasks, getTaskById, toggleTaskArchived, updateTask } from "../services/taskServices.js";
 
 const genericMessageError = {
     message: `Internal Server Error`
@@ -44,6 +44,18 @@ export const deleteTaskByIdController = async(req, res) =>{
         const taskId = req.params.taskId
         const taskToDelete = await deleteTaskById(authorId, taskId)
         res.json(taskToDelete)
+    }catch(error){
+        console.error(error + error.message)
+        res.status(500).json(genericMessageError)
+    }
+}
+
+export const toggleTaskArchivedController = async(req, res) =>{
+    try{
+        const authorId = req.params.authorId
+        const taskId = req.params.taskId
+        const taskToToggle = await toggleTaskArchived(authorId, taskId)
+        res.json(taskToToggle)
     }catch(error){
         console.error(error + error.message)
         res.status(500).json(genericMessageError)
