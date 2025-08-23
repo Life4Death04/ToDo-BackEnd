@@ -66,9 +66,25 @@ export const getAllUsers = async() =>{
 }
 
 export const getUserById = async (id) =>{
-    return await prisma.user.findFirst({
-        where: {id: parseInt(id)}
+    const existingUser = await prisma.user.findFirst({
+        where: {id: parseInt(id)},
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            profileImage: true,
+            phoneNumber: true,
+            createdAt: true,
+            emailVerified: true
+        }
     })
+
+    if(!existingUser) {
+        throw new Error('User not found')
+    }
+
+    return existingUser;
 }
 
 export const updateUserData = async (id, {firstName, lastName, email}) =>{

@@ -6,7 +6,8 @@ import {
     fetchTasksController, 
     getAllTasksController, 
     getTaskByIdController, 
-    updateTaskController 
+    updateTaskController,
+    toggleTaskArchivedController
 } from "../controllers/taskControllers.js";
 
 const taskRoutes = express.Router();
@@ -20,5 +21,6 @@ taskRoutes.delete('/delete/:authorId/:taskId', authMiddleware, deleteTaskByIdCon
 //----------- Deprecated Task Routes ---------------//
 taskRoutes.get('/findTask/:authorId', authMiddleware, getAllTasksController);
 taskRoutes.get('/findTask/:authorId/:taskId', authMiddleware, getTaskByIdController);
+taskRoutes.patch('/toggleArchived/:authorId/:taskId', authMiddleware, toggleTaskArchivedController);
 
 export default taskRoutes;

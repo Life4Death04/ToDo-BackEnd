@@ -33,18 +33,6 @@ export const findAllUsersController = async(req, res) =>{
     }
 }
 
-export const findUserByIdController = async(req, res) =>{
-    try{
-        const userToFind = await getUserById(req.params.id);
-        if (!userToFind) return res.status(404).json({error: 'User not found'})
-        res.json(userToFind)
-    }catch(error){
-        console.error(error);
-        console.log(req.params.id)
-        res.status(500).json({message: messageError})
-    }
-}
-
 export const updateUserDataController = async(req, res) =>{
     try{
         const userToUpdate = req.params.id;
@@ -93,5 +81,17 @@ export const loginUserController = async(req, res) =>{
     }catch(error){
         console.error(error + error.code);
         res.status(500).json({message: error.message || messageError})
+    }
+}
+
+export const findUserByIdController = async(req, res) =>{
+    try{
+        const userToFind = await getUserById(req.params.id);
+        if (!userToFind) return res.status(404).json({error: 'User not found'})
+        res.json(userToFind)
+    }catch(error){
+        console.error(error);
+        console.log(req.params.id)
+        res.status(500).json({message: messageError})
     }
 }
