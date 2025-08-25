@@ -6,7 +6,8 @@ const genericMessageError = {
 
 export const fetchTasksController = async(req, res) =>{
     try{
-        const userId = req.params.userId;
+        const userId = req.user.userId;
+        if(!userId) return res.status(401).json({message: 'Unauthorized'})
         const task = await fetchTasks(userId)
         res.json(task)
     }catch(error){
@@ -30,8 +31,8 @@ export const createTaskController = async(req, res) =>{
 export const updateTaskController = async(req, res) =>{
     try{
         const taskData = req.body
-        const newTask = await updateTask(taskData);
-        res.json(newTask)
+        const updatedTask = await updateTask(taskData);
+        res.json(updatedTask)
     }catch(error){
         console.error(error + error.message)
         res.status(500).json(genericMessageError)

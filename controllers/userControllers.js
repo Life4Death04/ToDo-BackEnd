@@ -1,4 +1,4 @@
-import { createUser, deleteUser, getAllUsers, getUserById, loginUser, updateUserData, updateUserPassword } from "../services/userServices.js";
+import { createUser, deleteUser, getAllUsers, getUser, getUserById, loginUser, updateUserData, updateUserPassword } from "../services/userServices.js";
 
 const messageError = 'Internal Server Error'
 
@@ -92,6 +92,20 @@ export const findUserByIdController = async(req, res) =>{
     }catch(error){
         console.error(error);
         console.log(req.params.id)
+        res.status(500).json({message: messageError})
+    }
+}
+
+
+export const getUserController = async(req, res)=>{
+    try{
+       const userId = req.user.userId;
+       if(!userId) return res.status(400).json({message: 'User ID is required'});
+       const user = await getUser(userId);
+       if (!user) return res.status(404).json({message: 'User not found'});
+       res.json(user);
+    }catch(error){
+        console.error(error);
         res.status(500).json({message: messageError})
     }
 }

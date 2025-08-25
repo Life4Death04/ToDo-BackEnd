@@ -20,14 +20,15 @@ export const createUser = async ({firstName, lastName, email, password}) =>{
             lastName,
             email,
             password: hashedPassword
+        },
+        select:{
+            email: true
         }
     })
 
     return{
         message: 'User registered successfully',
-        user: {
-            email: email
-        }
+        user: newUser
     }
 }
 
@@ -87,6 +88,23 @@ export const getUserById = async (id) =>{
     return existingUser;
 }
 
+export const getUser = async(userId) =>{
+    const user = await prisma.user.findUnique({
+        where: {id: parseInt(userId)},
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            profileImage: true,
+        }
+    })
+    
+    if(!user) throw new Error('User not found')
+
+    return user;
+}
+
 export const updateUserData = async (id, {firstName, lastName, email}) =>{
     const existingUser = await prisma.user.findUnique({
         where: {id: parseInt(id)}
@@ -102,16 +120,17 @@ export const updateUserData = async (id, {firstName, lastName, email}) =>{
             firstName: firstName,
             lastName: lastName,
             email: email
+        },
+        select: {
+            firstName: true,
+            lastName: true,
+            email: true
         }
     })
 
     return{
         message: 'User updated successfully',
-        data: {
-            firstName: updatingData.firstName,
-            lastName: updatingData.lastName,
-            email: updatingData.email
-        }
+        data: updatingData
     }
 }
 

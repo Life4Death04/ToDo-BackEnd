@@ -13,14 +13,14 @@ import {
 const taskRoutes = express.Router();
 
 //Protected Task Routes - All protected functions are functions that has to be requested using the API (rout) protected
-taskRoutes.get('/:userId', /* authMiddleware, */ fetchTasksController);
+taskRoutes.get('/get', authMiddleware, fetchTasksController);
 taskRoutes.post('/create', authMiddleware, createTaskController);
-taskRoutes.patch('/update', authMiddleware, updateTaskController);
 taskRoutes.delete('/delete/:authorId/:taskId', authMiddleware, deleteTaskByIdController);
 
 //----------- Deprecated Task Routes ---------------//
 taskRoutes.get('/findTask/:authorId', authMiddleware, getAllTasksController);
 taskRoutes.get('/findTask/:authorId/:taskId', authMiddleware, getTaskByIdController);
 taskRoutes.patch('/toggleArchived/:authorId/:taskId', authMiddleware, toggleTaskArchivedController);
+taskRoutes.patch('/update', authMiddleware, updateTaskController);
 
 export default taskRoutes;

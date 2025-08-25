@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteUserController, findAllUsersController, findUserByIdController, loginUserController, registeUserController, updateUserDataController, updateUserPasswordController } from '../controllers/userControllers.js';
+import { deleteUserController, findAllUsersController, findUserByIdController, loginUserController, registeUserController, updateUserDataController, updateUserPasswordController, getUserController } from '../controllers/userControllers.js';
 import { authMiddleware } from '../middlewares/auth.js';
 const userRoutes = express.Router();
 
@@ -10,7 +10,8 @@ userRoutes.delete('/delete/:id', deleteUserController)
 
 //Protected Routes - All protected functions are functions that has to be requested using the API (rout) protected
 userRoutes.post('/register', registeUserController)
-userRoutes.post('/login', /* authMiddleware, */ loginUserController)
+userRoutes.post('/login', loginUserController)
 userRoutes.get('/find/:id', authMiddleware, findUserByIdController)
+userRoutes.get('/getUser', authMiddleware, getUserController);
 
 export default userRoutes;
