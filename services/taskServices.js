@@ -44,7 +44,7 @@ export const createTaskItem = async ({authorId, taskName, description, dueDate, 
     }
 }
 
-export const updateTask = async({taskId, taskName, description, status, dueDate, priority, authorId}) =>{
+export const updateTask = async({id, taskName, description, status, dueDate, priority, authorId}) =>{
     const existingUser = await prisma.user.findUnique({
         where: {id: parseInt(authorId)}
     })
@@ -56,7 +56,7 @@ export const updateTask = async({taskId, taskName, description, status, dueDate,
     const task = await prisma.task.findUnique({
         where: {
             authorId: parseInt(authorId),
-            id: parseInt(taskId)
+            id: parseInt(id)
         }
     })
 
@@ -64,7 +64,7 @@ export const updateTask = async({taskId, taskName, description, status, dueDate,
         throw new Error("Task not found!")
     }
 
-    const taskState = await prisma.task.update({
+    const updatedTask = await prisma.task.update({
         where: {
             authorId: task.authorId,
             id: task.id
@@ -80,7 +80,7 @@ export const updateTask = async({taskId, taskName, description, status, dueDate,
 
     return{
         message: `Task updated successfully`,
-        data: taskState
+        data: updatedTask
     }
 }
 
