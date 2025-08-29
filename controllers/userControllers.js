@@ -7,21 +7,10 @@ export const registeUserController = async(req, res) =>{
         const newUser = await createUser(req.body);
         res.json(newUser);
     }catch(error){
-        console.error(error + error.code);
-        res.status(500).json({message: messageError})
+        console.error(error);
+        res.status(500).json({message: error.message || 'Error Registering User'} )
     }
 }
-
-/* export const loginUserController = async(req, res) =>{
-    try{
-        const data = req.body
-        const userToLogin = await loginUser(data)
-        res.status(200).json({message: 'Logged In', data: userToLogin})
-    }catch(error){
-        console.error(error)
-        res.status(500).json({message: messageError})
-    }
-} */
 
 export const findAllUsersController = async(req, res) =>{
     try{
