@@ -23,9 +23,18 @@ model User{                           //We can use uuid() instead of autoincreme
   phoneNumber     String?     @db.VarChar(30)
   createdAt       DateTime    @default(now()) @db.Timestamp(0)
   emailVerified   Boolean     @default(false)
-  tasks           Task[]
+  tasks           Task[]      // Tasks created by the user
+  lists           List[]      // Lists created by the user
 }
 
+model List{
+  id              Int         @id       @default(autoincrement())
+  name            String      @db.VarChar(50)
+  authorId        Int         // User who created the list
+  author          User        @relation(fields: [authorId], references: [id])
+  tasks           Task[]      // Tasks in the list
+  createdAt       DateTime    @default(now()) @db.Timestamp(0)
+}
 model Task{
   id              Int         @id       @default(autoincrement())
   taskName        String      @db.VarChar(100)
@@ -33,18 +42,19 @@ model Task{
   status          Status      
   dueDate         DateTime?   
   priority        Priority    @default(LOW)
-  archived        Boolean     @default(false)
-  authorId        Int
+  authorId        Int         // User who created the task
   author          User        @relation(fields: [authorId], references: [id])
+  listId          Int?        // List to which the task belongs
+  list            List?        @relation(fields: [listId], references: [id])
 }
 
-enum Status {
+enum Status { // Status of the task
   TODO
   IN_PROGRESS
   DONE
 }
 
-enum Priority {
+enum Priority { // Priority of the task
   LOW
   MEDIUM
   HIGH
