@@ -18,7 +18,7 @@ export const fetchTasks = async(id) =>{
     }
 }
 
-export const createTaskItem = async ({authorId, taskName, description, dueDate, priority, status}) =>{
+export const createTaskItem = async ({authorId, taskName, description, dueDate, priority, status, listId}) =>{
     const existingUser = await prisma.user.findUnique({
         where: {id: parseInt(authorId)}
     })
@@ -34,7 +34,8 @@ export const createTaskItem = async ({authorId, taskName, description, dueDate, 
             dueDate: dueDate,
             priority: priority,
             status: status,
-            authorId: parseInt(authorId)
+            authorId: parseInt(authorId),
+            listId: parseInt(listId)
         }
     })
 
@@ -44,7 +45,7 @@ export const createTaskItem = async ({authorId, taskName, description, dueDate, 
     }
 }
 
-export const updateTask = async({id, taskName, description, status, dueDate, priority, authorId}) =>{
+export const updateTask = async({id, taskName, description, status, dueDate, priority, authorId, listId}) =>{
     const existingUser = await prisma.user.findUnique({
         where: {id: parseInt(authorId)}
     })
@@ -74,7 +75,8 @@ export const updateTask = async({id, taskName, description, status, dueDate, pri
             description: description,
             status: status,
             dueDate: dueDate,
-            priority: priority
+            priority: priority,
+            listId: parseInt(listId)
         }
     })
 
