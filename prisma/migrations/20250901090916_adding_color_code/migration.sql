@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `list` ADD COLUMN `color` VARCHAR(20) NOT NULL DEFAULT '000';
