@@ -7,11 +7,11 @@ import {
 } from "../services/listServices.js";
 
 export const createListController = async (req, res) => {
-    const { title } = req.body;
+    const { title, color } = req.body;
     const userId = req.user.userId;
 
     try {
-        const result = await createList({ title, userId });
+        const result = await createList({ title, color, userId });
         return res.status(201).json(result);
     } catch (error) {
         return res.status(400).json({ error: error.message });

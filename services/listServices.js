@@ -1,6 +1,6 @@
 import prisma from '../prisma/client.js'
 
-export const createList = async ({ title, userId }) => {
+export const createList = async ({ title, color, userId }) => {
     const existingUser = await prisma.user.findUnique({ 
         where: { id: parseInt(userId) } 
     });
@@ -12,7 +12,8 @@ export const createList = async ({ title, userId }) => {
     const newList = await prisma.list.create(
         {
             data: {
-                name: title,
+                title: title,
+                color: color,
                 author: {
                     connect: { id: userId }
                 }
@@ -37,7 +38,7 @@ export const getListsByUserId = async (userId) => {
 
     const lists = await prisma.list.findMany({
         where: { authorId: parseInt(userId) },
-        select: { id: true, name: true }
+        select: { id: true, title: true, color: true }
     });
 
     return {
@@ -57,7 +58,7 @@ export const getSingleListById = async (listId, userId) => {
 
     const list = await prisma.list.findUnique({
         where: { id: parseInt(listId), authorId: parseInt(userId) },
-        select: { id: true, name: true, tasks: true }
+        select: { id: true, title: true, tasks: true }
     });
 
     if (!list) {
