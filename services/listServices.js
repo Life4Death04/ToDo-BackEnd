@@ -58,7 +58,7 @@ export const getSingleListById = async (listId, userId) => {
 
     const list = await prisma.list.findUnique({
         where: { id: parseInt(listId), authorId: parseInt(userId) },
-        select: { id: true, title: true, tasks: true }
+        select: { id: true, title: true, tasks: true, color: true }
     });
 
     if (!list) {
@@ -71,7 +71,7 @@ export const getSingleListById = async (listId, userId) => {
     };
 }
 
-export const updateListById = async (listId, userId, title) => {
+export const updateListById = async (listId, userId, title, color) => {
     const existingUser = await prisma.user.findUnique(
         { where: { id: parseInt(userId) } }
     );
@@ -90,7 +90,8 @@ export const updateListById = async (listId, userId, title) => {
 
     const updatedList = await prisma.list.update({
         where: { id: parseInt(listId) },
-        data: { name: title }
+        data: { title: title, color: color },
+        select: { id: true, title: true, color: true }
     });
 
     return {
@@ -115,6 +116,10 @@ export const deleteListById = async (listId, userId) => {
     if (!list) {
         throw new Error('List not found');
     }
+
+    await prisma.task.deleteMany({
+        where: { listId: parseInt(listId) }
+    })
 
     await prisma.list.delete({
         where: { id: parseInt(listId) }

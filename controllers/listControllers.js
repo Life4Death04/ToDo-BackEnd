@@ -43,11 +43,10 @@ export const getSingleListByIdController = async (req, res) => {
 
 export const updateListByIdController = async (req, res) => {
     const { id } = req.params;
-    const { title } = req.body;
+    const { title, color } = req.body;
     const userId = req.user.userId;
-
     try {
-        const result = await updateListById(id, userId, title);
+        const result = await updateListById(id, userId, title, color);
         return res.status(200).json(result);
     } catch (error) {
         return res.status(400).json({ error: error.message });
