@@ -105,7 +105,7 @@ export const getUser = async(userId) =>{
     return user;
 }
 
-export const updateUserData = async (id, {firstName, lastName, email}) =>{
+export const updateUserData = async ({id, firstName, lastName, email}) =>{
     const existingUser = await prisma.user.findUnique({
         where: {id: parseInt(id)}
     })

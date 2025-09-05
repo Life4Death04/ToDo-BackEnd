@@ -20,7 +20,7 @@ taskRoutes.delete('/delete/:authorId/:taskId', authMiddleware, deleteTaskByIdCon
 //----------- Deprecated Task Routes ---------------//
 taskRoutes.get('/findTask/:authorId', authMiddleware, getAllTasksController);
 taskRoutes.get('/findTask/:authorId/:taskId', authMiddleware, getTaskByIdController);
-taskRoutes.patch('/toggleArchived/:authorId/:taskId', authMiddleware, toggleTaskArchivedController);
 taskRoutes.patch('/update', authMiddleware, updateTaskController);
+taskRoutes.patch('/toggleArchived/:authorId/:taskId', authMiddleware, toggleTaskArchivedController);
 
 export default taskRoutes;

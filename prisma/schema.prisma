@@ -20,7 +20,7 @@ model User{                           //We can use uuid() instead of autoincreme
   email           String      @unique
   password        String  
   profileImage    String?     @db.VarChar(255)
-  phoneNumber     String?     @db.VarChar(30)
+  phoneNumber     String?     @db.VarChar(30) //Deprecated
   createdAt       DateTime    @default(now()) @db.Timestamp(0)
   emailVerified   Boolean     @default(false)
   tasks           Task[]      // Tasks created by the user
@@ -47,6 +47,7 @@ model Task{
   author          User        @relation(fields: [authorId], references: [id])
   listId          Int?        // List to which the task belongs
   list            List?        @relation(fields: [listId], references: [id])
+  archived        Boolean      @default(false) // New field to indicate if the task is archived
 }
 
 enum Status { // Status of the task
