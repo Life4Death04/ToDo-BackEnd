@@ -18,7 +18,7 @@ export const fetchTasks = async(id) =>{
     }
 }
 
-export const createTaskItem = async ({authorId, taskName, description, dueDate, priority, status, listId}) =>{
+export const createTaskItem = async ({authorId, taskName, description, dueDate, priority, status, listId, archived}) =>{
     const existingUser = await prisma.user.findUnique({
         where: {id: parseInt(authorId)}
     })
@@ -36,6 +36,7 @@ export const createTaskItem = async ({authorId, taskName, description, dueDate, 
             status: status,
             authorId: parseInt(authorId),
             listId: parseInt(listId),
+            archived: archived ? archived : false
         }
     })
 
