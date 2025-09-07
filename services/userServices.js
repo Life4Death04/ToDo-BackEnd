@@ -19,7 +19,10 @@ export const createUser = async ({firstName, lastName, email, password}) =>{
             firstName,
             lastName,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            settings: {
+                create: {}
+            }
         },
         select:{
             email: true
