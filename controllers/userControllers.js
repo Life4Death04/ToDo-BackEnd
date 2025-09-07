@@ -24,10 +24,8 @@ export const findAllUsersController = async(req, res) =>{
 
 export const updateUserDataController = async(req, res) =>{
     try{
-        const userToUpdate = req.params.id;
         const dataToUpdate = req.body
-        const newData = await updateUserData(userToUpdate, dataToUpdate)
-        /* if(!userToUpdate) return res.status(404).json({error: 'User not found'}) */
+        const newData = await updateUserData(dataToUpdate)
         res.json(newData);
     }catch(error){
         console.error(error);

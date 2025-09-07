@@ -4,7 +4,6 @@ import { authMiddleware } from '../middlewares/auth.js';
 const userRoutes = express.Router();
 
 userRoutes.get('/find/all', findAllUsersController)
-userRoutes.put('/update/:id', updateUserDataController)
 userRoutes.patch('/updatePassword', updateUserPasswordController)
 userRoutes.delete('/delete/:id', deleteUserController)
 
@@ -13,5 +12,6 @@ userRoutes.post('/register', registeUserController)
 userRoutes.post('/login', loginUserController)
 userRoutes.get('/find/:id', authMiddleware, findUserByIdController)
 userRoutes.get('/getUser', authMiddleware, getUserController);
+userRoutes.put('/update/:id', authMiddleware, updateUserDataController)
 
 export default userRoutes;

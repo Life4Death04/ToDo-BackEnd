@@ -59,7 +59,7 @@ export const toggleTaskArchivedController = async(req, res) =>{
         res.json(taskToToggle)
     }catch(error){
         console.error(error + error.message)
-        res.status(500).json(genericMessageError)
+        res.status(500).json({message: error.message || 'Internal Server Error'})
     }
 }
 
