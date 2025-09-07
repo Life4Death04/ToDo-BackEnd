@@ -21,7 +21,7 @@ export const createUser = async ({firstName, lastName, email, password}) =>{
             email,
             password: hashedPassword,
             settings: {
-                create: {}
+                create: {} // Create default settings
             }
         },
         select:{
@@ -34,29 +34,6 @@ export const createUser = async ({firstName, lastName, email, password}) =>{
         user: newUser
     }
 }
-
-/* export const loginUser = async ({email, password}) =>{
-    const user = await prisma.user.findUnique({
-        where: {
-            email: email
-        }
-    })
-
-    if(!user){
-        throw new Error('Email not found')
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.password)
-
-    if(!passwordMatch){
-        throw new Error('Invalid Credentials')
-    }
-
-    return{
-        message: 'Login Successful',
-        user: user.email
-    }
-} */
 
 export const getAllUsers = async() =>{
     return await prisma.user.findMany({
@@ -137,7 +114,7 @@ export const updateUserData = async ({id, firstName, lastName, email}) =>{
     }
 }
 
-export const updateUserPassword = async ({email, password}) =>{
+/* export const updateUserPassword = async ({email, password}) =>{
     const existingUser = await prisma.user.findFirst({
         where: {
             email: email
@@ -166,7 +143,7 @@ export const deleteUser = async (id) =>{
     return prisma.user.delete({
         where: {id: parseInt(id)}
     })
-}
+} */
 
 
 //Login Service

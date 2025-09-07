@@ -1,4 +1,10 @@
-import { createUser, deleteUser, getAllUsers, getUser, getUserById, loginUser, updateUserData, updateUserPassword } from "../services/userServices.js";
+import { 
+    createUser, 
+    getUser, 
+    getUserById, 
+    loginUser, 
+    updateUserData, 
+} from "../services/userServices.js";
 
 const messageError = 'Internal Server Error'
 
@@ -12,7 +18,7 @@ export const registeUserController = async(req, res) =>{
     }
 }
 
-export const findAllUsersController = async(req, res) =>{
+/* export const findAllUsersController = async(req, res) =>{
     try{
         const users = await getAllUsers()
         res.json(users)
@@ -21,7 +27,7 @@ export const findAllUsersController = async(req, res) =>{
         res.status(500).json({message: messageError})
     }
 }
-
+ */
 export const updateUserDataController = async(req, res) =>{
     try{
         const dataToUpdate = req.body
@@ -33,7 +39,7 @@ export const updateUserDataController = async(req, res) =>{
     }
 }
 
-export const updateUserPasswordController = async(req, res) =>{
+/* export const updateUserPasswordController = async(req, res) =>{
     try{
         const userData = req.body
         const passwordToChange = await updateUserPassword(userData)
@@ -42,9 +48,9 @@ export const updateUserPasswordController = async(req, res) =>{
         console.error(error + error.code)
         res.status(500).json({message: messageError + error.message})
     }
-}
+} */
 
-export const deleteUserController = async(req, res) =>{
+/* export const deleteUserController = async(req, res) =>{
     try{
         const userId = req.params.id;
         const userToDelete = await deleteUser(userId);
@@ -57,7 +63,7 @@ export const deleteUserController = async(req, res) =>{
             res.status(500).json({message: messageError})
         }   
     }
-}
+} */
 
 //Login controller - Just a basic controller logic, nothing special
 export const loginUserController = async(req, res) =>{
