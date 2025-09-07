@@ -89,7 +89,6 @@ export const findUserByIdController = async(req, res) =>{
     }
 }
 
-
 export const getUserController = async(req, res)=>{
     try{
        const userId = req.user.userId;

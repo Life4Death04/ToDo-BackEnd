@@ -5,7 +5,7 @@ import {
     loginUserController, 
     registeUserController, 
     updateUserDataController,  
-    getUserController 
+    getUserController
 } from '../controllers/userControllers.js';
 const userRoutes = express.Router();
 
@@ -19,7 +19,5 @@ userRoutes.post('/login', loginUserController)
 userRoutes.get('/find/:id', authMiddleware, findUserByIdController)
 userRoutes.get('/getUser', authMiddleware, getUserController);
 userRoutes.put('/update/:id', authMiddleware, updateUserDataController)
-
-// Settings routes:
 
 export default userRoutes;
