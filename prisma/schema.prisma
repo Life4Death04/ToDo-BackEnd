@@ -25,6 +25,7 @@ model User{                           //We can use uuid() instead of autoincreme
   emailVerified   Boolean     @default(false)
   tasks           Task[]      // Tasks created by the user
   lists           List[]      // Lists created by the user
+  settings        UserSettings? // User settings (one-to-one relationship)
 }
 
 model List{
@@ -48,6 +49,33 @@ model Task{
   listId          Int?        // List to which the task belongs
   list            List?        @relation(fields: [listId], references: [id])
   archived        Boolean      @default(false) // New field to indicate if the task is archived
+}
+
+model UserSettings {
+  id              Int           @id       @default(autoincrement())
+  theme           Theme         @default(LIGHT) // Default theme is light
+  dateFormat      DateFormat    @default(MM_DD_YYYY) // Default date format
+  language        Language      @default(EN) // Default language is English
+  defaultPriority Priority      @default(MEDIUM) // Default priority for new tasks
+  defaultStatus   Status        @default(TODO) // Default status for new tasks
+  userId          Int           @unique
+  user            User          @relation(fields: [userId], references: [id])
+}
+
+enum Language { // Language preference of the user
+  EN
+  ES
+}
+
+enum DateFormat {
+  MM_DD_YYYY
+  DD_MM_YYYY
+  YYYY_MM_DD
+}
+
+enum Theme { // Theme of the user interface
+  LIGHT
+  DARK
 }
 
 enum Status { // Status of the task
