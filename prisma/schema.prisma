@@ -29,26 +29,26 @@ model User{                           //We can use uuid() instead of autoincreme
 }
 
 model List{
-  id              Int         @id       @default(autoincrement())
-  title           String      @db.VarChar(50)
-  color           String      @db.VarChar(20) @default("#000000")//Color code
-  authorId        Int         // User who created the list
-  author          User        @relation(fields: [authorId], references: [id])
-  tasks           Task[]      // Tasks in the list
-  createdAt       DateTime    @default(now()) @db.Timestamp(0)
+  id              Int           @id       @default(autoincrement())
+  title           String        @db.VarChar(50)
+  color           String        @db.VarChar(20) @default("#000000")//Color code
+  authorId        Int           // User who created the list
+  author          User          @relation(fields: [authorId], references: [id])
+  tasks           Task[]        // Tasks in the list
+  createdAt       DateTime      @default(now()) @db.Timestamp(0)
 }
 model Task{
-  id              Int         @id       @default(autoincrement())
-  taskName        String      @db.VarChar(100)
-  description     String?     @db.VarChar(200)
+  id              Int           @id       @default(autoincrement())
+  taskName        String        @db.VarChar(100)
+  description     String?       @db.VarChar(200)
   status          Status      
   dueDate         DateTime?   
-  priority        Priority    @default(LOW)
-  authorId        Int         // User who created the task
-  author          User        @relation(fields: [authorId], references: [id])
-  listId          Int?        // List to which the task belongs
-  list            List?        @relation(fields: [listId], references: [id])
-  archived        Boolean      @default(false) // New field to indicate if the task is archived
+  priority        Priority      @default(LOW)
+  authorId        Int           // User who created the task
+  author          User          @relation(fields: [authorId], references: [id])
+  listId          Int?          // List to which the task belongs
+  list            List?         @relation(fields: [listId], references: [id])
+  archived        Boolean       @default(false) // New field to indicate if the task is archived
 }
 
 model UserSettings {
