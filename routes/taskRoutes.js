@@ -7,7 +7,8 @@ import {
     getAllTasksController, 
     getTaskByIdController, 
     updateTaskController,
-    toggleTaskArchivedController
+    toggleTaskArchivedController,
+    toggleTaskStatusController
 } from "../controllers/taskControllers.js";
 
 const taskRoutes = express.Router();
@@ -22,5 +23,6 @@ taskRoutes.get('/findTask/:authorId', authMiddleware, getAllTasksController);
 taskRoutes.get('/findTask/:authorId/:taskId', authMiddleware, getTaskByIdController);
 taskRoutes.patch('/update', authMiddleware, updateTaskController);
 taskRoutes.patch('/toggleArchived/:authorId/:taskId', authMiddleware, toggleTaskArchivedController);
+taskRoutes.patch('/:taskId/toggle-status', authMiddleware, toggleTaskStatusController);
 
 export default taskRoutes;

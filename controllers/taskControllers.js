@@ -1,4 +1,13 @@
-import { createTaskItem, deleteTaskById, fetchTasks, getAllTasks, getTaskById, toggleTaskArchived, updateTask } from "../services/taskServices.js";
+import { 
+    createTaskItem, 
+    deleteTaskById, 
+    fetchTasks, 
+    getAllTasks, 
+    getTaskById, 
+    toggleTaskArchived, 
+    toggleTaskStatus,
+    updateTask 
+} from "../services/taskServices.js";
 
 const genericMessageError = {
     message: `Internal Server Error`
@@ -57,6 +66,19 @@ export const toggleTaskArchivedController = async(req, res) =>{
         const taskId = req.params.taskId
         const taskToToggle = await toggleTaskArchived(authorId, taskId)
         res.json(taskToToggle)
+    }catch(error){
+        console.error(error + error.message)
+        res.status(500).json({message: error.message || 'Internal Server Error'})
+    }
+}
+
+export const toggleTaskStatusController = async(req, res) =>{
+    try{
+        const authorId = req.user.userId;
+        if(!authorId) return res.status(401).json({message: 'Unauthorized'})
+        const taskId = req.params.taskId
+        const task = await toggleTaskStatus(authorId, taskId)
+        res.json(task)
     }catch(error){
         console.error(error + error.message)
         res.status(500).json({message: error.message || 'Internal Server Error'})

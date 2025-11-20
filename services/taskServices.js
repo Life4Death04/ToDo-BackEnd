@@ -185,3 +185,37 @@ export const getTaskById = async(authorId, taskId) =>{
         data: userTask
     }
 }
+
+export const toggleTaskStatus = async(authorId, taskId) => {
+    const existingUser = await prisma.user.findUnique({
+        where: { id: parseInt(authorId) }
+    });
+
+    if(!existingUser){
+        throw new Error('User not found!')
+    }
+
+    const taskToToggle = await prisma.task.findUnique({
+        where: {
+            authorId: existingUser.id,
+            id: parseInt(taskId)
+        }
+    });
+
+    if(!taskToToggle){
+        throw new Error('Task not found!')
+    }
+
+    // toggle only between TODO and DONE; any other status will be set to DONE
+    const newStatus = taskToToggle.status === 'DONE' ? 'TODO' : 'DONE';
+
+    const updatedTask = await prisma.task.update({
+        where: { id: taskToToggle.id },
+        data: { status: newStatus }
+    });
+
+    return {
+        message: `Task status toggled successfully`,
+        data: updatedTask
+    }
+}
