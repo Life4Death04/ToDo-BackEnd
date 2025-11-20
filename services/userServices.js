@@ -1,118 +1,123 @@
 import prisma from "../prisma/client.js";
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-export const createUser = async ({firstName, lastName, email, password}) =>{
-    const existingUser = await prisma.user.findUnique({
-        where: {
-            email: email
-        }
-    })
+export const createUser = async ({ firstName, lastName, email, password }) => {
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
 
-    if(existingUser) throw new Error('Email already in use');
+  if (existingUser) throw new Error("Email already in use");
 
-    const userPassword = password;
-    const hashedPassword = await bcrypt.hash(userPassword, 10)
+  const userPassword = password;
+  const hashedPassword = await bcrypt.hash(userPassword, 10);
 
-    const newUser = await prisma.user.create({
-        data: {
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-            settings: {
-                create: {} // Create default settings
-            }
-        },
-        select:{
-            email: true
-        }
-    })
+  const newUser = await prisma.user.create({
+    data: {
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    },
+    select: {
+      email: true,
+      id: true,
+    },
+  });
 
-    return{
-        message: 'User registered successfully',
-        user: newUser
-    }
-}
+  // Create default settings for the new user
+  await prisma.userSettings.create({
+    data: {
+      userId: newUser.id,
+    },
+  });
 
-export const getAllUsers = async() =>{
-    return await prisma.user.findMany({
-        select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true
-        }
-    })
-}
+  return {
+    message: "User registered successfully",
+    user: newUser,
+  };
+};
 
-export const getUserById = async (id) =>{
-    const existingUser = await prisma.user.findFirst({
-        where: {id: parseInt(id)},
-        select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            profileImage: true,
-            phoneNumber: true,
-            createdAt: true,
-            emailVerified: true
-        }
-    })
+export const getAllUsers = async () => {
+  return await prisma.user.findMany({
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+    },
+  });
+};
 
-    if(!existingUser) {
-        throw new Error('User not found')
-    }
+export const getUserById = async (id) => {
+  const existingUser = await prisma.user.findFirst({
+    where: { id: parseInt(id) },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      profileImage: true,
+      phoneNumber: true,
+      createdAt: true,
+      emailVerified: true,
+    },
+  });
 
-    return existingUser;
-}
+  if (!existingUser) {
+    throw new Error("User not found");
+  }
 
-export const getUser = async(userId) =>{
-    const user = await prisma.user.findUnique({
-        where: {id: parseInt(userId)},
-        select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            profileImage: true,
-        }
-    })
-    
-    if(!user) throw new Error('User not found')
+  return existingUser;
+};
 
-    return user;
-}
+export const getUser = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: parseInt(userId) },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      profileImage: true,
+    },
+  });
 
-export const updateUserData = async ({id, firstName, lastName, email}) =>{
-    const existingUser = await prisma.user.findUnique({
-        where: {id: parseInt(id)}
-    })
+  if (!user) throw new Error("User not found");
 
-    if(!existingUser) {
-        throw new Error('User not found')
-    }
+  return user;
+};
 
-    const updatingData = await prisma.user.update({
-        where: {id: parseInt(id)},
-        data: {
-            firstName: firstName,
-            lastName: lastName,
-            email: email
-        },
-        select: {
-            firstName: true,
-            lastName: true,
-            email: true
-        }
-    })
+export const updateUserData = async ({ id, firstName, lastName, email }) => {
+  const existingUser = await prisma.user.findUnique({
+    where: { id: parseInt(id) },
+  });
 
-    return{
-        message: 'User updated successfully',
-        data: updatingData
-    }
-}
+  if (!existingUser) {
+    throw new Error("User not found");
+  }
+
+  const updatingData = await prisma.user.update({
+    where: { id: parseInt(id) },
+    data: {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+    },
+    select: {
+      firstName: true,
+      lastName: true,
+      email: true,
+    },
+  });
+
+  return {
+    message: "User updated successfully",
+    data: updatingData,
+  };
+};
 
 /* export const updateUserPassword = async ({email, password}) =>{
     const existingUser = await prisma.user.findFirst({
@@ -145,7 +150,6 @@ export const deleteUser = async (id) =>{
     })
 } */
 
-
 //Login Service
 /*STEPS:
     1* First make searches about email and password hashed in the DB (If they exists and they are correct we can proceed)
@@ -154,34 +158,32 @@ export const deleteUser = async (id) =>{
 
     !!!IMPORTANT: Add a value for our secret key in the .env
 */
-export const loginUser = async({email, password}) => {
-    const user = await prisma.user.findUnique({
-        where: {email: email}
-    })
+export const loginUser = async ({ email, password }) => {
+  const user = await prisma.user.findUnique({
+    where: { email: email },
+  });
 
-    if(!user){
-        throw new Error("Email not registered")
-    }
+  if (!user) {
+    throw new Error("Email not registered");
+  }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, user.password);
 
-    if(!isMatch){
-        throw new Error("Invalid password or email")
-    }
+  if (!isMatch) {
+    throw new Error("Invalid password or email");
+  }
 
-    //Creating special token - Ask for explanation
-    const token = jwt.sign(
-        {userId: user.id},
-        process.env.JWT_SECRET,
-        {expiresIn: "1d"}
-    )
+  //Creating special token - Ask for explanation
+  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
 
-    return({
-        message: "Login successful",
-        token,
-        user: {
-            id: user.id,
-            email: user.email
-        }
-    })
-}
+  return {
+    message: "Login successful",
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+    },
+  };
+};
