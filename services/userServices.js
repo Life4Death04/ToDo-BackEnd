@@ -14,29 +14,32 @@ export const createUser = async ({ firstName, lastName, email, password }) => {
   const userPassword = password;
   const hashedPassword = await bcrypt.hash(userPassword, 10);
 
-  const newUser = await prisma.user.create({
-    data: {
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-    },
-    select: {
-      email: true,
-      id: true,
-    },
-  });
+  const result = await prisma.$transaction(async (tx) => {
+    const newUser = await tx.user.create({
+      data: {
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+      },
+      select: {
+        email: true,
+        id: true,
+      },
+    });
 
-  // Create default settings for the new user
-  await prisma.userSettings.create({
-    data: {
-      userId: newUser.id,
-    },
+    await tx.userSettings.create({
+      data: {
+        userId: newUser.id,
+      },
+    });
+
+    return newUser;
   });
 
   return {
     message: "User registered successfully",
-    user: newUser,
+    user: result,
   };
 };
 
